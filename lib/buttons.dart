@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './models/player.dart';
 
 class FloatButton extends StatelessWidget {
   final GestureTapCallback func;
@@ -21,36 +22,36 @@ class FloatButton extends StatelessWidget {
 }
 
 class Counter extends StatefulWidget {
-  String desc;
-  int add;
-  Counter(this.desc, this.add);
+  final String desc;
+  final int count;
+  final Function onChange;
+  final Color color;
+  Counter({required this.desc, required this.count, required this.onChange,required this.color});
 
   @override
-  _CounterState createState() => _CounterState(desc, add);
+  _CounterState createState() => _CounterState(desc, count,onChange);
 }
 
 class _CounterState extends State<Counter> {
-  String desc;
-  int add;
-  _CounterState(this.desc, this.add);
-  int count = 0;
+  final String desc;
+  int count;
+  final Function onChange;
+  _CounterState(this.desc, this.count, this.onChange);
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5), color: Colors.teal[400]),
+            borderRadius: BorderRadius.circular(5), color: widget.color),
         child: Column(
           children: [
             Row(
               children: [
                 count > 0
                     ? InkWell(
-                        onTap: () {
-                          setState(() {
-                            count -= add;
-                          });
-                        },
+                        onTap: () => setState(() {
+                          onChange(-1);
+                        }),
                         child: Icon(
                           Icons.remove,
                           color: Colors.white,
@@ -73,11 +74,9 @@ class _CounterState extends State<Counter> {
                   ),
                 ),
                 InkWell(
-                    onTap: () {
-                      setState(() {
-                        count += add;
-                      });
-                    },
+                    onTap: () => setState(() {
+                          onChange(1);
+                        }),
                     child: Icon(
                       Icons.add,
                       color: Colors.white,
